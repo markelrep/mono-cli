@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/csv"
 	"errors"
+	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -10,6 +11,8 @@ import (
 	"regexp"
 	"strconv"
 	"time"
+
+	"github.com/lungria/mono-cli/statementsPdf"
 
 	"github.com/lungria/mono"
 )
@@ -27,6 +30,8 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	pdfFile := flag.String("o", "", "Generate statements in PDF format. e.g: <mono-cli -o path/to/output/file.pdf>")
+	flag.Parse()
 
 	writer = csv.NewWriter(os.Stdout)
 
@@ -48,7 +53,14 @@ func main() {
 		}
 
 		statements = Sort(statements)
-		saveStatements(statements)
+		stmData := saveStatements(statements)
+
+		if *pdfFile != "" {
+			err = statementsPdf.Generate(*pdfFile, stmData)
+			if err != nil {
+				log.Fatal("Generate pdf failed", err)
+			}
+		}
 		<-apiRateLimit
 	}
 }
@@ -87,9 +99,9 @@ func parseConfig() (config, error) {
 var newLineRegexp = regexp.MustCompile(`\r?\n`)
 var headerPrinted = false
 
-func saveStatements(items []mono.StatementItem) {
+func saveStatements(items []mono.StatementItem) [][]string {
 	if len(items) == 0 {
-		return
+		return nil
 	}
 
 	if !headerPrinted {
@@ -128,4 +140,5 @@ func saveStatements(items []mono.StatementItem) {
 	if err != nil {
 		log.Fatal(err)
 	}
+	return csvData
 }
