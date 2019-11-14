@@ -39,7 +39,10 @@ var (
 
 // Generate returns pdf file
 func Generate(filename string, data [][]string) error {
-	statements := prettyCsvArr(data)
+	statements, err := prettyCsvArr(data)
+	if err != nil {
+		return err
+	}
 	//Create new PDF
 	pdf := cpdf{Fpdf: gofpdf.New("P", "mm", "A4", "")}
 
@@ -62,7 +65,7 @@ func Generate(filename string, data [][]string) error {
 func (p cpdf) renderStatementsTable(data [][]string, headers []string) {
 	y := p.Fpdf.GetY()
 	count := 0
-	for row := 1; row < len(data); row++ {
+	for row := 0; row < len(data); row++ {
 		p.Fpdf.SetTextColor(24, 24, 24)
 		p.Fpdf.SetFillColor(255, 255, 255)
 		maxHt := lineHt
@@ -72,7 +75,7 @@ func (p cpdf) renderStatementsTable(data [][]string, headers []string) {
 			if count > len(data) {
 				count = 1
 			}
-			cell.str = strings.Join(data[(len(data)-1)-row][col:col+1], " ")
+			cell.str = strings.Join(data[(len(data) -1)-row][col:col+1], " ")
 			cell.list = p.Fpdf.SplitLines([]byte(cell.str), colWd-cellGap-cellGap)
 			cell.ht = float64(len(cell.list)) * lineHt
 			if cell.ht > maxHt {
