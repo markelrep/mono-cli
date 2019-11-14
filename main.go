@@ -60,6 +60,7 @@ func main() {
 			if err != nil {
 				log.Fatal("Generate pdf failed :", err)
 			}
+			return
 		}
 		<-apiRateLimit
 	}
