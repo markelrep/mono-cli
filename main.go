@@ -58,7 +58,7 @@ func main() {
 		if *pdfFile != "" {
 			err = statementsPdf.Generate(*pdfFile, stmData)
 			if err != nil {
-				log.Fatal("Generate pdf failed", err)
+				log.Fatal("Generate pdf failed :", err)
 			}
 		}
 		<-apiRateLimit

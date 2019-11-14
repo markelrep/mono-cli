@@ -97,7 +97,7 @@ func (p cpdf) renderStatementsTable(data [][]string, headers []string) {
 		}
 		y += maxHt + cellGap + cellGap
 
-		p.addNextPages(y, headers)
+		y = p.addNextPages(y, headers)
 	}
 }
 
@@ -127,7 +127,7 @@ func (p cpdf) renderTableHeaders(headers []string) {
 	p.Fpdf.Ln(-1)
 }
 
-func (p cpdf) addNextPages(y float64, headers []string) {
+func (p cpdf) addNextPages(y float64, headers []string) float64 {
 	_, ht, _ := p.Fpdf.PageSize(p.Fpdf.PageNo())
 	if y+cell.ht*lineHt > ht {
 		p.Fpdf.SetMargins(marginH, 15, marginH)
@@ -137,7 +137,7 @@ func (p cpdf) addNextPages(y float64, headers []string) {
 
 		p.renderTableHeaders(headers)
 
-		y = p.Fpdf.GetY()
-
+		return p.Fpdf.GetY()
 	}
+	return y
 }
