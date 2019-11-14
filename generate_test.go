@@ -3,19 +3,20 @@ package main
 import (
 	"bufio"
 	"bytes"
-	"github.com/lungria/mono-cli/statementsPdf"
 	"io/ioutil"
 	"os"
 	"testing"
+
+	"github.com/lungria/mono-cli/statementsPdf"
 )
 
 func TestGenerate(t *testing.T) {
 	var file *os.File
 	var fileReader *bufio.Reader
 
-	testData := [][]string {
-		{"qweqweqwe", "1569903114", "Нарахування відсотків за вересень", "4829", "true", "22", "22", "980","0","0","1930"},
-		{"qwesdfqwe", "1569903114", "CARD2CARD UAMAB", "4829", "true", "5066", "5066", "980","0","0","193550"},
+	testData := [][]string{
+		{"qweqweqwe", "1569903114", "Нарахування відсотків за вересень", "4829", "true", "22", "22", "980", "0", "0", "1930"},
+		{"qwesdfqwe", "1569903114", "CARD2CARD UAMAB", "4829", "true", "5066", "5066", "980", "0", "0", "193550"},
 	}
 
 	err := statementsPdf.Generate("statementsPdf/testPdf/statement_test_actual.pdf", testData)
@@ -58,8 +59,8 @@ func TestGeneratePagination(t *testing.T) {
 	var fileReader *bufio.Reader
 	var multipliedTestData = make([][]string, maxRows)
 
-	testData := [][]string {
-		{"qweqweqwe", "1569903114", "Нарахування відсотків за вересень", "4829", "true", "22", "22", "980","0","0","1930"},
+	testData := [][]string{
+		{"qweqweqwe", "1569903114", "Нарахування відсотків за вересень", "4829", "true", "22", "22", "980", "0", "0", "1930"},
 	}
 
 	for i := 0; i < maxRows; i++ {
